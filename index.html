@@ -304,10 +304,10 @@
                 return array;
             }
             
-            function Board_from_list_of_squares(list_of_squares, shuffle) {
+            function Board_from_list_of_squares(list_of_squares) {
                 var Board = "";
                 for (var i = 0; i < 25; i++) {
-                    var square = shuffle ? list_of_squares.splice(Math.floor(Math.random() * list_of_squares.length), 1)[0] : list_of_squares.shift();
+                    var square = list_of_squares.splice(Math.floor(Math.random() * list_of_squares.length), 1)[0];
                     Board += '{"name":"' + square + '"},';
                 }
                 Board = "[" + Board.slice(0, -1) + "]";
@@ -389,21 +389,28 @@
                         cols_w_graf.push(col);
                     }
                 });
-                console.log(result);
                 return result;
             }
 
+            function shouldshuffle(squares, n, simple_bingos) {
+                squares = shuffle(squares)
+                if (n <= 5) {
+                    if (simple_bingos == true) {
+                        while (is_bingo_simple(squares) == false) {
+                            shuffle(squares);
+                            console.log("wrong");
+                        }
+                    }
+                }
+                console.log("right");
+                return squares;
+            }
 
             function generate_normal_board(n, simple_bingos, unbalanced, Graffiti, Souls, Chars) {
                 var graffiti = n_graffiti(n, unbalanced, Graffiti);
                 var nongraffiti = n_nongraffiti(25 - graffiti.length, unbalanced, Souls, Chars);
-                var squares = shuffle(graffiti.concat(nongraffiti));
-                var simple = simple_bingos && n <= 5;
-                while (!simple) {
-                    shuffle(squares);
-                    simple = is_bingo_simple(squares);
-                }
-                var board = Board_from_list_of_squares(squares, simple ? -1 : 1);
+                var squares = shouldshuffle(graffiti.concat(nongraffiti), n, simple_bingos);
+                var board = Board_from_list_of_squares(squares);
                 return { board, graffiti };
             }
 
@@ -438,13 +445,8 @@
                     }
                 }
                 const graffitis = squares.filter(graffiti => graffiti.includes("GRAFFITI"));
-                squares = shuffle(squares);
-                let simple = simple_bingos;
-                while (!simple) {
-                    shuffle(squares);
-                    simple = is_bingo_simple(squares);
-                }
-                const board = Board_from_list_of_squares(squares, simple ? -1 : 1);
+                squares = shouldshuffle(squares, number_of_graffiti, simple_bingos)
+                const board = Board_from_list_of_squares(squares);
                 return { board, graffiti: graffitis };
             }
 
@@ -487,13 +489,8 @@
                     }
                 }
                 const graffitis = squares.filter(graffiti => graffiti.includes("GRAFFITI"));
-                squares = shuffle(squares);
-                let simple = simple_bingos;
-                while (!simple) {
-                    shuffle(squares);
-                    simple = is_bingo_simple(squares);
-                }
-                const board = Board_from_list_of_squares(squares, simple ? -1 : 1);
+                squares = shouldshuffle(squares, number_of_graffiti, simple_bingos);
+                const board = Board_from_list_of_squares(squares);
                 return { board, graffiti: graffitis };
             }
 
@@ -525,14 +522,9 @@
                         }
                     }
                 }
-                squares = shuffle(squares);
-                let simple = simple_bingos;
-                while (!simple) {
-                    shuffle(squares);
-                    simple = is_bingo_simple(squares);
-                }
+                squares = shouldshuffle(squares, number_of_graffiti, simple_bingos);
                 const graffitis = squares.filter(graffiti => graffiti.includes("GRAFFITI"));
-                const board = Board_from_list_of_squares(squares, 1);
+                const board = Board_from_list_of_squares(squares);
                 return { board, graffiti: graffitis };
             }
 
@@ -596,7 +588,7 @@
                 }
 
                 var graffitis = squares.filter(graffiti => graffiti.includes("GRAFFITI"));
-                var board = Board_from_list_of_squares(squares, 0);
+                var board = Board_from_list_of_squares(squares);
                 return { board, graffiti: graffitis };
                 }
 
