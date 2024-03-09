@@ -306,9 +306,8 @@
             
             function Board_from_list_of_squares(list_of_squares) {
                 var Board = "";
-                for (var i = 0; i < 25; i++) {
-                    var square = list_of_squares.splice(Math.floor(Math.random() * list_of_squares.length), 1)[0];
-                    Board += '{"name":"' + square + '"},';
+                for (const squarex of list_of_squares) {
+                    Board += '{"name":"' + squarex + '"},';
                 }
                 Board = "[" + Board.slice(0, -1) + "]";
                 return Board;
