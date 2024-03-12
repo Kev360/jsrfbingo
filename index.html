@@ -35,6 +35,9 @@
                 text-align: center;
                 z-index: -1;
             }
+            #output {
+                opacity :  0;
+            }
         </style>
     </head>
     <body>
@@ -135,12 +138,19 @@
         <!-- Generate Output -->
         <br>
         <button id="button">Generate</button>
+        <button id="toggle" onclick="toggle()">Toggle Board</button>
         <pre style="background-color: #172e14;" id="notice"></pre>
         <br>
         <br>
         <b><u id="graffiti_title"></u></b>
         <ol style="margin-bottom: 0;" id="graffiti_list"></ol>
-        <pre style="background-color: #14232e;" id="output"></pre>
+        <div id="outputContainer">
+            <div id="outputContent" style="background-color: #14232e;">
+                <pre id="output"></pre>
+            </div>
+        </div>
+        
+
 
         <script>
             const Dogen = ["Dogen 005 - Isolated Platform down the hill",
@@ -628,6 +638,21 @@
                 custom_mode = mode
             }
 
+            function toggle() {
+                // Toggle visibility and apply text-shadow for blur effect
+                let outputtext = document.getElementById("output");
+
+                if (outputtext.style.opacity == "1") {
+                    outputtext.style.opacity = "0";
+                } else {
+                    outputtext.style.opacity = "1";
+                }
+            }
+
+            
+
+
+
             async function generate() {
                 // get options from ui
                 var mode = document.querySelector('input[name="board_type"]:checked').value;
@@ -667,6 +692,10 @@
                     notice_banner.style = "background-color: #47000b"
                     notice_banner.innerHTML = "Could not copy to clipboard, check console for details."
                 }
+
+                
+
+
                 var output = document.getElementById("output");
                 output.innerHTML = board;
 
