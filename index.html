@@ -52,6 +52,20 @@
         <label for="normal_board">Normal Board</label>
         <br>
 
+        <div id = "stackedareas" style="padding-top: 10px; padding-bottom: 10px; padding-left: 20px; color:greenyellow">
+            <input type="radio" name="stacked" id="none" checked="">
+            <label>None</label>
+
+            <input type="radio" name="stacked" id="shibstacked" checked="">
+            <label>Shibuya Stacked</label>
+
+            <input type="radio" name="stacked" id="koganestacked" checked="">
+            <label>Kogane Stacked</label>
+
+            <input type="radio" name="stacked" id="bentenstacked" checked="">
+            <label>Benten Stacked</label>
+        </div>
+
         <input type="radio" name="board_type" id="graffiti-less_board" value="2" onclick="set_mode(2)">
         <label for="graffiti-less_board">No Graffiti Board</label>
         <br>
@@ -316,6 +330,7 @@
             
             function Board_from_list_of_squares(list_of_squares) {
                 var Board = "";
+                // console.log("squares length : ".concat(list_of_squares.length))
                 for (const squarex of list_of_squares) {
                     Board += '{"name":"' + squarex + '"},';
                 }
@@ -323,10 +338,6 @@
                 return Board;
             }
 
-
-            //  n_graffiti(n, unbalanced, Graffiti);
-            
-            
             function n_graffiti(n, unbalanced, Graffiti) {
                 var number_of_graffiti;
 
@@ -373,10 +384,31 @@
                     else if (ben_opts.includes(square.slice(0, 3))) Benten.push(square);
                 }
                 var squares = [];
-                for (var i = 0; i < n; i++) {
-                    var area = [Shibuya_cho, Kogane, Benten][Math.floor(Math.random() * 3)];
-                    squares.push(area.splice(Math.floor(Math.random() * area.length), 1)[0]);
-                }
+                if (document.getElementById("none").checked == true) {
+                    for (var i = 0; i < n; i++) {
+                        var area = [Shibuya_cho, Kogane, Benten][Math.floor(Math.random() * 3)];
+                        squares.push(area.splice(Math.floor(Math.random() * area.length), 1)[0]);
+                    }
+                } else {
+                    numforarea = Math.floor(Math.random() * (4)) + 10;
+                    if (document.getElementById("shibstacked").checked == true) {
+                        for (var i = 0; i < numforarea; i++) {
+                            squares.push(Shibuya_cho.splice(Math.floor(Math.random() * Shibuya_cho.length), 1)[0])
+                        }
+                    } else if (document.getElementById("koganestacked").checked == true) {
+                        for (var i = 0; i < numforarea; i++) {
+                            squares.push(Kogane.splice(Math.floor(Math.random() * Kogane.length), 1)[0])
+                        }
+                    } else {
+                        for (var i = 0; i < numforarea; i++) {
+                            squares.push(Benten.splice(Math.floor(Math.random() * Benten.length), 1)[0])
+                        }
+                    }
+                    for (var i = 0; i < n - numforarea; i++) {
+                        var area = [Shibuya_cho, Kogane, Benten][Math.floor(Math.random() * 3)];
+                        squares.push(area.splice(Math.floor(Math.random() * area.length), 1)[0]);
+                    }
+                    }
                 return squares;
             }
 
@@ -630,6 +662,11 @@
                     document.getElementById("custom_board_ui").style= "";
                 } else {
                     document.getElementById("custom_board_ui").style= "display:none";
+                }
+                if (mode === 1) {
+                    document.getElementById("stackedareas").style = "padding-top: 10px; padding-bottom: 10px; padding-left: 20px; color:greenyellow";
+                } else {
+                    document.getElementById("stackedareas").style = "display:none";
                 }
             }
 
